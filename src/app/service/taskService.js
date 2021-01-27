@@ -11,6 +11,10 @@ class taskService extends ApiService{
         return this.get('/');
     }
 
+    buscar_Id(id){
+        return this.get(`/${id}`);
+    }
+
     salvar(task){
         return this.post('/', task);
     }
