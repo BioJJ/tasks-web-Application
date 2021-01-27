@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import taskService from '../../app/service/taskService';
 import { Link } from 'react-router-dom';
 
-
-
 import './style.css';
 
-
 export default class Main extends Component {
-
     
     state = {
         tasks: []
@@ -27,8 +23,6 @@ export default class Main extends Component {
 
         this.setState({tasks: response.data});
     };
- 
-
     
     render(){
         const {tasks} =  this.state;

@@ -8,7 +8,7 @@ class taskService extends ApiService{
         super('/task');
     }
     listar(){
-        return this.get(`/`);
+        return this.get('/');
     }
 
     salvar(task){
