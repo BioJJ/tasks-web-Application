@@ -46,5 +46,14 @@ class taskService extends ApiService{
         }
     }
 
+    obterListaStatus(){
+        return  [
+            { label: 'Selecione...', value: '' },
+            { label: 'Pendente' , value : 'Pendente' },
+            { label: 'Finalizado' , value : 'Finalizado' }
+        ]
+
+    }
+
 }
 export default taskService;

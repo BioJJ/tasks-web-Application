@@ -4,6 +4,8 @@ import './style.css';
 import Card from '../../components/card';
 import FormGroup from '../../components/FormGroup';
 
+import SelectMenu from '../../components/selectMenu'
+
 import taskService from '../../app/service/taskService';
 import { mensagemSucesso, mensagemErro } from '../../components/toastr';
 
@@ -56,6 +58,8 @@ export default class Task extends Component{
 
 
     render(){
+
+        const tipos = this.service.obterListaStatus();
         return(
 
             <div className="post-list">
@@ -81,15 +85,16 @@ export default class Task extends Component{
                                        onChange={e => this.setState({descricao: e.target.value})} />
                             </FormGroup>
 
-                            <FormGroup label="Status: *" htmlFor="status">
-                                <input type="text" 
-                                       id="status"
-                                       className="form-control"
-                                       name="status"
-                                       onChange={e => this.setState({status: e.target.value})} />
+                            <FormGroup htmlFor="inputTipo" label="Status">
+                                <SelectMenu id="inputTipo" 
+                                            value={this.state.tipo}
+                                            onChange={e => this.setState({status: e.target.value })}
+                                            className="form-control" 
+                                            lista={tipos}
+                                             />
                             </FormGroup>
 
-                            
+                            <br/>
 
                             <button onClick={this.cadastrar} type="button" className="btn btn-success">
                                 <i className="pi pi-save"></i> Salvar

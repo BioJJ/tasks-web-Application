@@ -7,6 +7,9 @@ import FormGroup from '../../components/FormGroup';
 import taskService from '../../app/service/taskService';
 import { mensagemSucesso, mensagemErro } from '../../components/toastr';
 
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+
 
 export default class TaskUpdate extends Component{
   
@@ -38,7 +41,7 @@ export default class TaskUpdate extends Component{
         this.service = new taskService();
     }
 
-    cadastrar = () => {
+    atualizar = () => {
 
         const task = {
             descricao: this.state.descricao,
@@ -55,9 +58,9 @@ export default class TaskUpdate extends Component{
         }
 
 
-        this.service.salvar(task)
+        this.service.put(task)
         .then( response => {
-            mensagemSucesso('Tarefa cadastrado! ')
+            mensagemSucesso('Tarefa Atualizada! ')
             this.props.history.push('/')
         }).catch(error => {
             mensagemErro(error.response.data)
@@ -78,7 +81,7 @@ export default class TaskUpdate extends Component{
             <div className="post-list">
                 <fieldset>
                     
-                    <Card title="Cadastro de Tarefa">
+                    <Card title="Atualizar de Tarefa">
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="bs-component">
@@ -97,19 +100,10 @@ export default class TaskUpdate extends Component{
                                        name="descricao"
                                        onChange={e => this.setState({descricao: e.target.value})} />
                             </FormGroup>
-
-                            <FormGroup label="Status: *" htmlFor="status">
-                                <input type="text" 
-                                       id="status"
-                                       className="form-control"
-                                       name="status"
-                                       onChange={e => this.setState({status: e.target.value})} />
-                            </FormGroup>
-
                             
 
-                            <button onClick={this.cadastrar} type="button" className="btn btn-success">
-                                <i className="pi pi-save"></i> Salvar
+                            <button onClick={this.atualizar} type="button" className="btn btn-success">
+                                <i className="pi pi-save"></i> Atualizar
                             </button>
                             <button  onClick={this.cancelar} type="button" className="btn btn-danger">
                                 <i className="pi pi-times"></i> Cancelar
