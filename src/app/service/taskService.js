@@ -15,6 +15,10 @@ class taskService extends ApiService{
         return this.get(`/${id}`);
     }
 
+    alterarStatus(id, status){
+        return this.put(`/${id}/atualiza-status`, { status })
+    }
+
     salvar(task){
         return this.post('/', task);
     }

@@ -1,14 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react'
+import { withRouter } from 'react-router-dom'
+
+import Card from '../../components/card'
+import FormGroup from '../../components/FormGroup'
+import SelectMenu from '../../components/selectMenu'
+
 import taskService from '../../app/service/taskService';
-import { Link } from 'react-router-dom';
 
-import './style.css';
 
-export default class Main extends Component {
-    
+import * as messages from '../../components/toastr'
+
+import {Dialog} from 'primereact/dialog';
+import {Button} from 'primereact/button';
+
+
+
+class Main extends React.Component {
+
     state = {
-        tasks: []
-    };
+        tasks: [],
+        tipo: '',
+        showConfirmDialog: false,
+    }
+
     constructor(){
         super();
         this.service = new taskService();
@@ -23,26 +37,153 @@ export default class Main extends Component {
 
         this.setState({tasks: response.data});
     };
-    
+
+    NovaTarefa = () => {
+        this.props.history.push('/task')
+    }
+
+    editar = (id) => {
+        this.props.history.push(`/task-update/${id}`)
+    }
+
+    abrirConfirmacao = () => {
+        this.setState({ showConfirmDialog : true })
+    }
+    cancelarDelecao = () => {
+        this.setState({ showConfirmDialog : false })
+    }
+
+    deletar = (id) => {
+        this.service
+            .deletar(id)
+            .then(response => {
+                messages.mensagemSucesso('Tarefa deletada com sucesso!')
+                this.props.history.push('/')
+            }).catch(error => {
+                messages.mensagemErro('Ocorreu um erro ao tentar deletar a Tarefa')
+                
+            })
+    }
+
     render(){
+
+
         const {tasks} =  this.state;
+        const tipos = this.service.obterListaStatus();
+
+        const confirmDialogFooter = (
+            <div>
+                <Button label="Confirmar" icon="pi pi-check" onClick={this.deletar} />
+                <Button label="Cancelar" icon="pi pi-times" onClick={this.cancelarDelecao} 
+                        className="p-button-secondary" />
+            </div>
+        );
+
         return(
+
             <div className="post-list">
 
-                <div className="actions">
-                 <button>
-                     <Link to="/task">Nova Task</Link>
-                 </button>  
-                </div>
-                {tasks.map(tasks => (
-                    <article key={tasks.id}>
-                        <strong>{tasks.titulo}</strong>
-                        <p>{tasks.descricao}</p>
-                        <p>{tasks.status}</p>
+            
+            <Card title="Tarefas">
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="bs-component">
+
+                            {/* <FormGroup htmlFor="inputDesc" label="Descrição: ">
+                                <input type="text" 
+                                       className="form-control" 
+                                       id="inputDesc" 
+                                       value={this.state.descricao}
+                                       onChange={e => this.setState({descricao: e.target.value})}
+                                       placeholder="Digite a descrição" />
+                            </FormGroup> */}
+
+                            <FormGroup htmlFor="inputTipo" label="Status">
+                                <SelectMenu id="inputTipo" 
+                                            value={this.state.tipo}
+                                            onChange={e => this.setState({ tipo: e.target.value })}
+                                            className="form-control" 
+                                            lista={tipos}
+                                             />
+                            </FormGroup> 
+
+                            <button onClick={this.buscar} 
+                                    type="button" 
+                                    className="btn btn-success">
+                                    <i className="pi pi-search"></i> Buscar
+                            </button>
+                            <button onClick={this.NovaTarefa} 
+                                    type="button" 
+                                    className="btn btn-danger">
+                                    <i className="pi pi-plus"></i> Cadastrar
+                            </button>
+
+                        </div>
+                        
+                    </div>
+                </div>   
+
+                <br/>
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="bs-component">
+                        {tasks.map(tasks => (
+                            <article key={tasks.id}>
+                            <strong>{tasks.titulo}</strong>
+                            <p>{tasks.descricao}</p>
+                            <p>{tasks.status}</p>
+                            
+                            <button className="btn btn-success" title="Concluir"
+                               // disabled={ lancamento.status !== 'PENDENTE' }
+                                //onClick={e => props.alterarStatus(lancamento, 'EFETIVADO')} 
+                                type="button">
+                                <i className="pi pi-check"></i>
+                            </button>
+
+                             <button className="btn btn-warning"  title="Cancelar"
+                               // disabled={ lancamento.status !== 'PENDENTE' }
+                              //  onClick={e => props.alterarStatus(lancamento, 'CANCELADO')} 
+                                type="button">
+                                <i className="pi pi-times"></i>
+                             </button>
+
+                            <button type="button"   title="Editar"
+                            className="btn btn-primary"
+                            onClick={this.editar(tasks.id)}
+                            >
+                            <i className="pi pi-pencil"></i>
+                             </button>
+
+                            <button type="button"  title="Excluir"
+                            className="btn btn-danger" 
+                            onClick={this.deletar(tasks.id)}
+                            >
+                            <i className="pi pi-trash"></i>
+                            </button>
                          
                     </article>
                 ))}
+                        </div>
+                    </div>  
+                </div> 
+                <div>
+                    <Dialog header="Confirmação" 
+                            visible={this.state.showConfirmDialog} 
+                            style={{width: '50vw'}}
+                            footer={confirmDialogFooter} 
+                            modal={true} 
+                            onHide={() => this.setState({showConfirmDialog: false})}>
+                        Confirma a exclusão desta Tarefa?
+                    </Dialog>
+                </div>      
+               
+            </Card>
+
             </div>
         )
     }
+
 }
+
+
+export default withRouter(Main);

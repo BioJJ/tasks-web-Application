@@ -2,15 +2,15 @@ import React from 'react';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import Main from './pages/Main';
 import Task from './pages/Task';
-import Home from './pages/BuscarTarefas';
+import Main from './pages/Main';
+import TaskUpdate from './pages/TaskUpdate';
 
 const Routes = () =>(
     <BrowserRouter>
     <Switch>
-        <Route exact path="/" component={Home} />
-        {/* <Route exact path="/" component={Main} /> */}
+        <Route exact path="/" component={Main} />
+        <Route path="/task-update/:id?" component={TaskUpdate} />
         <Route path="/task" component={Task} />
 
     </Switch>
